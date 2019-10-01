@@ -2,149 +2,298 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "veeamcapacitytieraccount": {
-            "type": "string"
+        "capStorageName": {
+            "type": "string",
+            "defaultValue": "captierldk"
         },
         "location": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "westus"
         },
         "networkInterfaceName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "veeambr1383"
         },
         "SQLnetworkInterfaceName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "windowssql6152"
         },
         "networkSecurityGroupName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "VeeamBR1-nsg"
         },
         "networkSecurityGroupRules": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "name": "CloudConnect",
+                    "properties": {
+                        "priority": 1010,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "6180"
+                    }
+                },
+                {
+                    "name": "default-allow-rdp",
+                    "properties": {
+                        "priority": 1020,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "3389"
+                    }
+                },
+                {
+                    "name": "default-allow-ssh",
+                    "properties": {
+                        "priority": 1030,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "22"
+                    }
+                }
+            ]
         },
         "subnetName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "default"
         },
         "virtualNetworkName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "VeeamInsightLab-vnet"
         },
         "addressPrefixes": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                "192.168.1.0/24"
+            ]
         },
         "subnets": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "192.168.1.0/24",
+                        "serviceEndpoints": [
+                            {
+                                "service": "Microsoft.Storage",
+                                "locations": [
+                                    "westus",
+                                    "eastus"
+                                ]
+                            }
+                        ],
+                        "delegations": [],
+                        "privateEndpointNetworkPolicies": "Enabled",
+                        "privateLinkServiceNetworkPolicies": "Enabled"
+                    }
+                }
+            ]
         },
         "publicIpAddressName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "VeeamBR1-ip"
         },
         "sqlpublicIpAddressName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "SQL1-ip"
         },
         "publicIpAddressType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Dynamic"
         },
         "publicIpAddressSku": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Basic"
         },
         "virtualMachineName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "VeeamBR1"
         },
         "osDiskType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "StandardSSD_LRS"
         },
         "sqlosDiskType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Premium_LRS"
         },
         "dataDisks": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "lun": 0,
+                    "createOption": "attach",
+                    "caching": "ReadOnly",
+                    "writeAcceleratorEnabled": false,
+                    "id": null,
+                    "name": "VeeamBR1_DataDisk_0",
+                    "storageAccountType": null,
+                    "diskSizeGB": null
+                }
+            ]
         },
         "dataDiskResources": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "name": "VeeamBR1_DataDisk_0",
+                    "sku": "StandardSSD_LRS",
+                    "properties": {
+                        "diskSizeGB": 512,
+                        "creationData": {
+                            "createOption": "empty"
+                        }
+                    }
+                }
+            ]
         },
         "sqldataDisks": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "lun": 0,
+                    "createOption": "attach",
+                    "caching": "ReadOnly",
+                    "writeAcceleratorEnabled": false,
+                    "id": null,
+                    "name": "WindowsSQL1_DataDisk_0",
+                    "storageAccountType": null,
+                    "diskSizeGB": null
+                }
+            ]
         },
         "sqldataDiskResources": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                {
+                    "name": "WindowsSQL1_DataDisk_0",
+                    "sku": "Premium_LRS",
+                    "properties": {
+                        "diskSizeGB": 1024,
+                        "creationData": {
+                            "createOption": "empty"
+                        }
+                    }
+                }
+            ]
         },
         "virtualMachineSize": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Standard_D2_v3"
         },
         "sqlvirtualMachineSize": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Standard_D4s_v3"
         },
         "adminUsername": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "VeeamLab"
         },
         "adminPassword": {
-            "type": "secureString"
+            "type": "secureString",
+            "defaultValue": "Pass@word123!"
         },
         "diagnosticsStorageAccountName": {
-            "type": "string"
-        },
-        "diagnosticsStorageAccountId": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "veeamlabdiag<215>"
         },
         "diagnosticsStorageAccountType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Standard_LRS"
         },
         "diagnosticsStorageAccountKind": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Storage"
         },
         "sqlVirtualMachineName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "SQLVM1"
         },
         "sqlConnectivityType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Private"
         },
         "sqlPortNumber": {
-            "type": "int"
-        },
-        "sqlStorageDisksCount": {
-            "type": "int"
+            "type": "int",
+            "defaultValue": 1433
         },
         "sqlStorageWorkloadType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "General"
         },
         "sqlStorageDisksConfigurationType": {
-            "type": "string"
-        },
-        "sqlStorageStartingDeviceId": {
-            "type": "int"
-        },
-        "sqlStorageDeploymentToken": {
-            "type": "int"
+            "type": "string",
+            "defaultValue": "NEW"
         },
         "dataPath": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "F:\\data"
         },
         "dataDisksLUNs": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                0
+            ]
         },
         "logPath": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "F:\\log"
         },
         "logDisksLUNs": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                0
+            ]
         },
         "tempDbPath": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "F:\\tempDb"
         },
         "tempDisksLUNs": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": [
+                0
+            ]
         },
         "rServicesEnabled": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "false"
         },
         "linuxnetworkInterfaceName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "linuxvm1980"
         },
         "linuxvirtualMachineName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "LinuxVM1"
         },
         "linuxosDiskType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Premium_LRS"
         },
         "linuxvirtualMachineSize": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Standard_B2s"
         }
     },
     "variables": {
@@ -330,7 +479,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-04-01",
-            "name": "[parameters('veeamcapacitytieraccount')]",
+            "name": "[parameters('capStorageName')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
@@ -339,7 +488,7 @@
                 "name": "Standard_LRS",
                 "tier": "Standard"
             },
-            "kind": "StorageV2",
+            "kind": "Blob",
             "properties": {
                 "networkAcls": {
                     "bypass": "AzureServices",
