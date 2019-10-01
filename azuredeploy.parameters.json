@@ -188,9 +188,6 @@
         "diagnosticsStorageAccountName": {
             "value": "veeamlabdiagc215"
         },
-        "diagnosticsStorageAccountId": {
-            "value": "Microsoft.Storage/storageAccounts/veeaminsightlabdiag"
-        },
         "diagnosticsStorageAccountType": {
             "value": "Standard_LRS"
         },
@@ -209,20 +206,11 @@
         "sqlPortNumber": {
             "value": 1433
         },
-        "sqlStorageDisksCount": {
-            "value": 1
-        },
         "sqlStorageWorkloadType": {
             "value": "General"
         },
         "sqlStorageDisksConfigurationType": {
             "value": "NEW"
-        },
-        "sqlStorageStartingDeviceId": {
-            "value": 2
-        },
-        "sqlStorageDeploymentToken": {
-            "value": 43835
         },
         "dataPath": {
             "value": "F:\\data"
