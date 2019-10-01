@@ -6,6 +6,10 @@
             "type": "string",
             "defaultValue": "captierldk"
         },
+        "diagnosticsStorageAccountName": {
+            "type": "string",
+            "defaultValue": "veeamlabdiag<215>"
+        },
         "location": {
             "type": "string",
             "defaultValue": "westus"
@@ -212,10 +216,6 @@
         "adminPassword": {
             "type": "secureString",
             "defaultValue": "Pass@word123!"
-        },
-        "diagnosticsStorageAccountName": {
-            "type": "string",
-            "defaultValue": "veeamlabdiag<215>"
         },
         "diagnosticsStorageAccountType": {
             "type": "string",
@@ -520,9 +520,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2019-04-01",
-            "name": "[concat(parameters('veeamcapacitytieraccount'), '/default')]",
+            "name": "[concat(parameters('capStorageName'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('veeamcapacitytieraccount'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('capStorageName'))]"
             ],
             "properties": {
                 "cors": {
@@ -536,10 +536,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2019-04-01",
-            "name": "[concat(parameters('veeamcapacitytieraccount'), '/default/', parameters('veeamcapacitytieraccount'))]",
+            "name": "[concat(parameters('capStorageName'), '/default/', parameters('capStorageName'))]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('veeamcapacitytieraccount'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('veeamcapacitytieraccount'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('capStorageName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('capStorageName'))]"
             ],
             "properties": {
                 "publicAccess": "None"
