@@ -488,7 +488,7 @@
                 "name": "Standard_LRS",
                 "tier": "Standard"
             },
-            "kind": "Blob",
+            "kind": "BlobStorage",
             "properties": {
                 "networkAcls": {
                     "bypass": "AzureServices",
