@@ -111,9 +111,6 @@
         "virtualMachineName": {
             "value": "VeeamBR1"
         },
-        "virtualMachineRG": {
-            "value": "VeeamInsightLab"
-        },
         "osDiskType": {
             "value": "StandardSSD_LRS"
         },
