@@ -14,4 +14,3 @@ $disks = Get-Disk | Where-Object partitionstyle -eq 'raw' | Sort-Object number
     }
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
-Install-Module -Name Az -AllowClobber -Scope AllUsers -Force
