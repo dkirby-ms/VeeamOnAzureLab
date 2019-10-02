@@ -4,11 +4,11 @@
     "parameters": {
         "capStorageName": {
             "type": "string",
-            "defaultValue": "captierldk"
+            "defaultValue": "storcaptier<ldk>"
         },
         "diagnosticsStorageAccountName": {
             "type": "string",
-            "defaultValue": "veeamlabdiag<215>"
+            "defaultValue": "stvmlabdiag<215>"
         },
         "location": {
             "type": "string",
@@ -16,15 +16,15 @@
         },
         "networkInterfaceName": {
             "type": "string",
-            "defaultValue": "veeambr1383"
+            "defaultValue": "nic-veeambr1383"
         },
         "SQLnetworkInterfaceName": {
             "type": "string",
-            "defaultValue": "windowssql6152"
+            "defaultValue": "nic-windowssql6152"
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "VeeamBR1-nsg"
+            "defaultValue": "nsg-VeeamBR1"
         },
         "networkSecurityGroupRules": {
             "type": "array",
@@ -78,11 +78,11 @@
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "default"
+            "defaultValue": "snet-default"
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "VeeamInsightLab-vnet"
+            "defaultValue": "vnet-VeeamInsightLab"
         },
         "addressPrefixes": {
             "type": "array",
@@ -115,11 +115,11 @@
         },
         "publicIpAddressName": {
             "type": "string",
-            "defaultValue": "VeeamBR1-ip"
+            "defaultValue": "pip-VeeamBR1"
         },
         "sqlpublicIpAddressName": {
             "type": "string",
-            "defaultValue": "SQL1-ip"
+            "defaultValue": "pip-SQL1"
         },
         "publicIpAddressType": {
             "type": "string",
@@ -131,7 +131,7 @@
         },
         "virtualMachineName": {
             "type": "string",
-            "defaultValue": "VeeamBR1"
+            "defaultValue": "vm-VeeamBR1"
         },
         "osDiskType": {
             "type": "string",
@@ -227,7 +227,7 @@
         },
         "sqlVirtualMachineName": {
             "type": "string",
-            "defaultValue": "SQLVM1"
+            "defaultValue": "vm-SQLVM1"
         },
         "sqlConnectivityType": {
             "type": "string",
@@ -285,7 +285,7 @@
         },
         "linuxvirtualMachineName": {
             "type": "string",
-            "defaultValue": "LinuxVM1"
+            "defaultValue": "vm-LinuxVM1"
         },
         "linuxosDiskType": {
             "type": "string",
