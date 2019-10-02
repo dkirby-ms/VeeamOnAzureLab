@@ -1,5 +1,4 @@
 # VeeamOnAzureLab
-Contents:<br>
 This lab is conducted as a guided workshop to give partner technical resources hands-on experience with Veeam Backup & Recovery and Microsoft Azure. The repo contains the following resources:<br><br>
 <b>Veeam Lab Guide.pptx</b> - Start here for lab instructions<br>
 <b>azuredeploy.json</b> - The ARM template to deploy Azure environment to run the lab.<br>
