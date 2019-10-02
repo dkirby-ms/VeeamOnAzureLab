@@ -13,3 +13,4 @@ Use the Deploy to Azure button below to start deploying resources to Azure. Be s
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fyouf05%2FVeeamOnAzureLab%2Fmaster%2Fazuredeploy.json" target="_blank">
     <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
 </a><br>
+<i><b>IMPORTANT:</b> This repo is not meant for production use and should only be used for temporary lab environment scenarios. Do not deploy these templates into any production environment.</i>
