@@ -117,10 +117,6 @@
             "type": "string",
             "defaultValue": "pip-VeeamBR1"
         },
-        "sqlpublicIpAddressName": {
-            "type": "string",
-            "defaultValue": "pip-SQL1"
-        },
         "publicIpAddressType": {
             "type": "string",
             "defaultValue": "Dynamic"
@@ -366,18 +362,6 @@
             }
         },
         {
-            "name": "[parameters('sqlPublicIpAddressName')]",
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2019-02-01",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
-            },
-            "sku": {
-                "name": "[parameters('publicIpAddressSku')]"
-            }
-        },
-        {
             "name": "[parameters('dataDiskResources')[copyIndex()].name]",
             "type": "Microsoft.Compute/disks",
             "apiVersion": "2019-03-01",
@@ -552,8 +536,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-                "[concat('Microsoft.Network/publicIpAddresses/', parameters('sqlPublicIpAddressName'))]"
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -563,10 +546,7 @@
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             },
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIpAddress": {
-                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('sqlPublicIpAddressName'))]"
-                            }
+                            "privateIPAllocationMethod": "Dynamic"
                         }
                     }
                 ]
