@@ -18,7 +18,7 @@
             "type": "string",
             "defaultValue": "nic-veeambr1383"
         },
-        "SQLnetworkInterfaceName": {
+        "sqlNetworkInterfaceName": {
             "type": "string",
             "defaultValue": "nic-windowssql6152"
         },
@@ -94,7 +94,7 @@
             "type": "array",
             "defaultValue": [
                 {
-                    "name": "default",
+                    "name": "[parameters('subnetName')]",
                     "properties": {
                         "addressPrefix": "192.168.1.0/24",
                         "serviceEndpoints": [
@@ -137,7 +137,7 @@
             "type": "string",
             "defaultValue": "StandardSSD_LRS"
         },
-        "sqlosDiskType": {
+        "sqlOsDiskType": {
             "type": "string",
             "defaultValue": "Premium_LRS"
         },
@@ -171,7 +171,7 @@
                 }
             ]
         },
-        "sqldataDisks": {
+        "sqlDataDisks": {
             "type": "array",
             "defaultValue": [
                 {
@@ -186,7 +186,7 @@
                 }
             ]
         },
-        "sqldataDiskResources": {
+        "sqlDataDiskResources": {
             "type": "array",
             "defaultValue": [
                 {
@@ -205,7 +205,7 @@
             "type": "string",
             "defaultValue": "Standard_D2_v3"
         },
-        "sqlvirtualMachineSize": {
+        "sqlVirtualMachineSize": {
             "type": "string",
             "defaultValue": "Standard_D4s_v3"
         },
@@ -249,7 +249,7 @@
             "type": "string",
             "defaultValue": "F:\\data"
         },
-        "dataDisksLUNs": {
+        "dataDisksLuns": {
             "type": "array",
             "defaultValue": [
                 0
@@ -259,7 +259,7 @@
             "type": "string",
             "defaultValue": "F:\\log"
         },
-        "logDisksLUNs": {
+        "logDisksLuns": {
             "type": "array",
             "defaultValue": [
                 0
@@ -269,7 +269,7 @@
             "type": "string",
             "defaultValue": "F:\\tempDb"
         },
-        "tempDisksLUNs": {
+        "tempDisksLuns": {
             "type": "array",
             "defaultValue": [
                 0
@@ -279,19 +279,19 @@
             "type": "string",
             "defaultValue": "false"
         },
-        "linuxnetworkInterfaceName": {
+        "linuxNetworkInterfaceName": {
             "type": "string",
             "defaultValue": "linuxvm1980"
         },
-        "linuxvirtualMachineName": {
+        "linuxVirtualMachineName": {
             "type": "string",
             "defaultValue": "vm-LinuxVM1"
         },
-        "linuxosDiskType": {
+        "linuxOsDiskType": {
             "type": "string",
             "defaultValue": "Premium_LRS"
         },
-        "linuxvirtualMachineSize": {
+        "linuxVirtualMachineSize": {
             "type": "string",
             "defaultValue": "Standard_B2s"
         }
@@ -366,7 +366,7 @@
             }
         },
         {
-            "name": "[parameters('sqlpublicIpAddressName')]",
+            "name": "[parameters('sqlPublicIpAddressName')]",
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2019-02-01",
             "location": "[parameters('location')]",
@@ -546,14 +546,14 @@
             }
         },
         {
-            "name": "[parameters('SQLnetworkInterfaceName')]",
+            "name": "[parameters('sqlNetworkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-                "[concat('Microsoft.Network/publicIpAddresses/', parameters('sqlpublicIpAddressName'))]"
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('sqlPublicIpAddressName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -565,7 +565,7 @@
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('sqlpublicIpAddressName'))]"
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('sqlPublicIpAddressName'))]"
                             }
                         }
                     }
@@ -573,38 +573,38 @@
             }
         },
         {
-            "name": "[parameters('sqldataDiskResources')[copyIndex()].name]",
+            "name": "[parameters('sqlDataDiskResources')[copyIndex()].name]",
             "type": "Microsoft.Compute/disks",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
-            "properties": "[parameters('sqldataDiskResources')[copyIndex()].properties]",
+            "properties": "[parameters('sqlDataDiskResources')[copyIndex()].properties]",
             "sku": {
-                "name": "[parameters('sqldataDiskResources')[copyIndex()].sku]"
+                "name": "[parameters('sqlDataDiskResources')[copyIndex()].sku]"
             },
             "copy": {
                 "name": "managedDiskResources",
-                "count": "[length(parameters('sqldataDiskResources'))]"
+                "count": "[length(parameters('sqlDataDiskResources'))]"
             }
         },
         {
-            "name": "[parameters('sqlvirtualMachineName')]",
+            "name": "[parameters('sqlVirtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "managedDiskResources",
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('sqlnetworkInterfaceName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('sqlNetworkInterfaceName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "[parameters('sqlvirtualMachineSize')]"
+                    "vmSize": "[parameters('sqlVirtualMachineSize')]"
                 },
                 "storageProfile": {
                     "osDisk": {
                         "createOption": "fromImage",
                         "managedDisk": {
-                            "storageAccountType": "[parameters('sqlosDiskType')]"
+                            "storageAccountType": "[parameters('sqlOsDiskType')]"
                         }
                     },
                     "imageReference": {
@@ -616,16 +616,16 @@
                     "copy": [
                         {
                             "name": "dataDisks",
-                            "count": "[length(parameters('sqldataDisks'))]",
+                            "count": "[length(parameters('sqlDataDisks'))]",
                             "input": {
-                                "lun": "[parameters('sqldataDisks')[copyIndex('dataDisks')].lun]",
-                                "createOption": "[parameters('sqldataDisks')[copyIndex('dataDisks')].createOption]",
-                                "caching": "[parameters('sqldataDisks')[copyIndex('dataDisks')].caching]",
-                                "writeAcceleratorEnabled": "[parameters('sqldataDisks')[copyIndex('dataDisks')].writeAcceleratorEnabled]",
-                                "diskSizeGB": "[parameters('sqldataDisks')[copyIndex('dataDisks')].diskSizeGB]",
+                                "lun": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].lun]",
+                                "createOption": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].createOption]",
+                                "caching": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].caching]",
+                                "writeAcceleratorEnabled": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].writeAcceleratorEnabled]",
+                                "diskSizeGB": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].diskSizeGB]",
                                 "managedDisk": {
-                                    "id": "[coalesce(parameters('sqldataDisks')[copyIndex('dataDisks')].id, if(equals(parameters('sqldataDisks')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('sqldataDisks')[copyIndex('dataDisks')].name)))]",
-                                    "storageAccountType": "[parameters('sqldataDisks')[copyIndex('dataDisks')].storageAccountType]"
+                                    "id": "[coalesce(parameters('sqlDataDisks')[copyIndex('dataDisks')].id, if(equals(parameters('sqlDataDisks')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('sqlDataDisks')[copyIndex('dataDisks')].name)))]",
+                                    "storageAccountType": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].storageAccountType]"
                                 }
                             }
                         }
@@ -634,12 +634,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('sqlnetworkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('sqlNetworkInterfaceName'))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('sqlvirtualMachineName')]",
+                    "computerName": "[parameters('sqlVirtualMachineName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -675,16 +675,16 @@
                     "DiskConfigurationType": "[parameters('sqlStorageDisksConfigurationType')]",
                     "StorageWorkloadType": "[parameters('sqlStorageWorkloadType')]",
                     "SQLDataSettings": {
-                        "LUNs": "[parameters('dataDisksLUNs')]",
+                        "LUNs": "[parameters('dataDisksLuns')]",
                         "DefaultFilePath": "[parameters('dataPath')]"
                     },
                     "SQLLogSettings": {
-                        "LUNs": "[parameters('logDisksLUNs')]",
+                        "LUNs": "[parameters('logDisksLuns')]",
                         "DefaultFilePath": "[parameters('logPath')]"
                     },
                     "SQLTempDbSettings": {
                         "DefaultFilePath": "[parameters('tempDbPath')]",
-                        "LUNs": "[parameters('tempDisksLUNs')]"
+                        "LUNs": "[parameters('tempDisksLuns')]"
                     }
                 },
                 "ServerConfigurationsManagementSettings": {
@@ -727,10 +727,10 @@
         {
             "apiVersion": "2018-06-01",
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('sqlvirtualMachineName'),'/', 'InitializeDataDisks')]",
+            "name": "[concat(parameters('sqlVirtualMachineName'),'/', 'InitializeDataDisks')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/',parameters('sqlvirtualMachineName'))]"
+                "[concat('Microsoft.Compute/virtualMachines/',parameters('sqlVirtualMachineName'))]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
@@ -746,7 +746,7 @@
             }
         },
         {
-            "name": "[parameters('linuxnetworkInterfaceName')]",
+            "name": "[parameters('linuxNetworkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
@@ -772,23 +772,23 @@
             }
         },
         {
-            "name": "[parameters('linuxvirtualMachineName')]",
+            "name": "[parameters('linuxVirtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('linuxnetworkInterfaceName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('linuxNetworkInterfaceName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "[parameters('linuxvirtualMachineSize')]"
+                    "vmSize": "[parameters('linuxVirtualMachineSize')]"
                 },
                 "storageProfile": {
                     "osDisk": {
                         "createOption": "fromImage",
                         "managedDisk": {
-                            "storageAccountType": "[parameters('linuxosDiskType')]"
+                            "storageAccountType": "[parameters('linuxOsDiskType')]"
                         }
                     },
                     "imageReference": {
@@ -801,12 +801,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('linuxnetworkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('linuxNetworkInterfaceName'))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('linuxvirtualMachineName')]",
+                    "computerName": "[parameters('linuxVirtualMachineName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]"
                 },
