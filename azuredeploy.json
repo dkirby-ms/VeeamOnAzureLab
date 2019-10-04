@@ -494,7 +494,7 @@
                     "bypass": "AzureServices",
                     "virtualNetworkRules": [
                         {
-                            "id": "[concat(variables('vnetId'), '/subnets/default')]",
+                            "id": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
                             "action": "Allow",
                             "state": "Succeeded"
                         }
