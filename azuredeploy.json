@@ -277,7 +277,7 @@
         },
         "linuxNetworkInterfaceName": {
             "type": "string",
-            "defaultValue": "linuxvm1980"
+            "defaultValue": "nic-linuxvm1980"
         },
         "linuxVirtualMachineName": {
             "type": "string",
