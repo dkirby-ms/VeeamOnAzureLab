@@ -18,9 +18,9 @@
             "type": "string",
             "defaultValue": "nic-veeambr1383"
         },
-        "sqlNetworkInterfaceName": {
+        "windowsNetworkInterfaceName": {
             "type": "string",
-            "defaultValue": "nic-windowssql6152"
+            "defaultValue": "nic-windowswindows6152"
         },
         "networkSecurityGroupName": {
             "type": "string",
@@ -58,21 +58,6 @@
                         "destinationAddressPrefix": "*",
                         "destinationPortRange": "3389"
                     }
-                },
-                {
-                    "name": "default-allow-ssh",
-                    "properties": {
-                        "priority": 1030,
-                        "protocol": "TCP",
-                        "access": "Allow",
-                        "direction": "Inbound",
-                        "sourceApplicationSecurityGroups": [],
-                        "destinationApplicationSecurityGroups": [],
-                        "sourceAddressPrefix": "*",
-                        "sourcePortRange": "*",
-                        "destinationAddressPrefix": "*",
-                        "destinationPortRange": "22"
-                    }
                 }
             ]
         },
@@ -82,7 +67,7 @@
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "vnet-VeeamInsightLab"
+            "defaultValue": "vnet-VeeamLab"
         },
         "addressPrefixes": {
             "type": "array",
@@ -133,9 +118,9 @@
             "type": "string",
             "defaultValue": "StandardSSD_LRS"
         },
-        "sqlOsDiskType": {
+        "windowsOsDiskType": {
             "type": "string",
-            "defaultValue": "Premium_LRS"
+            "defaultValue": "StandardSSD_LRS"
         },
         "dataDisks": {
             "type": "array",
@@ -167,43 +152,13 @@
                 }
             ]
         },
-        "sqlDataDisks": {
-            "type": "array",
-            "defaultValue": [
-                {
-                    "lun": 0,
-                    "createOption": "attach",
-                    "caching": "ReadOnly",
-                    "writeAcceleratorEnabled": false,
-                    "id": null,
-                    "name": "WindowsSQL1_DataDisk_0",
-                    "storageAccountType": null,
-                    "diskSizeGB": null
-                }
-            ]
-        },
-        "sqlDataDiskResources": {
-            "type": "array",
-            "defaultValue": [
-                {
-                    "name": "WindowsSQL1_DataDisk_0",
-                    "sku": "Premium_LRS",
-                    "properties": {
-                        "diskSizeGB": 1024,
-                        "creationData": {
-                            "createOption": "empty"
-                        }
-                    }
-                }
-            ]
-        },
         "virtualMachineSize": {
             "type": "string",
-            "defaultValue": "Standard_D2_v3"
+            "defaultValue": "Standard_D4_v3"
         },
-        "sqlVirtualMachineSize": {
+        "windowsVirtualMachineSize": {
             "type": "string",
-            "defaultValue": "Standard_D4s_v3"
+            "defaultValue": "Standard_D2_v3"
         },
         "adminUsername": {
             "type": "string",
@@ -221,75 +176,9 @@
             "type": "string",
             "defaultValue": "Storage"
         },
-        "sqlVirtualMachineName": {
+        "windowsVirtualMachineName": {
             "type": "string",
-            "defaultValue": "vm-SQLVM1"
-        },
-        "sqlConnectivityType": {
-            "type": "string",
-            "defaultValue": "Private"
-        },
-        "sqlPortNumber": {
-            "type": "int",
-            "defaultValue": 1433
-        },
-        "sqlStorageWorkloadType": {
-            "type": "string",
-            "defaultValue": "General"
-        },
-        "sqlStorageDisksConfigurationType": {
-            "type": "string",
-            "defaultValue": "NEW"
-        },
-        "dataPath": {
-            "type": "string",
-            "defaultValue": "F:\\data"
-        },
-        "dataDisksLuns": {
-            "type": "array",
-            "defaultValue": [
-                0
-            ]
-        },
-        "logPath": {
-            "type": "string",
-            "defaultValue": "F:\\log"
-        },
-        "logDisksLuns": {
-            "type": "array",
-            "defaultValue": [
-                0
-            ]
-        },
-        "tempDbPath": {
-            "type": "string",
-            "defaultValue": "F:\\tempDb"
-        },
-        "tempDisksLuns": {
-            "type": "array",
-            "defaultValue": [
-                0
-            ]
-        },
-        "rServicesEnabled": {
-            "type": "string",
-            "defaultValue": "false"
-        },
-        "linuxNetworkInterfaceName": {
-            "type": "string",
-            "defaultValue": "nic-linuxvm1980"
-        },
-        "linuxVirtualMachineName": {
-            "type": "string",
-            "defaultValue": "vm-LinuxVM1"
-        },
-        "linuxOsDiskType": {
-            "type": "string",
-            "defaultValue": "Premium_LRS"
-        },
-        "linuxVirtualMachineSize": {
-            "type": "string",
-            "defaultValue": "Standard_B2s"
+            "defaultValue": "vm-WindowsVM1"
         }
     },
     "variables": {
@@ -530,7 +419,7 @@
             }
         },
         {
-            "name": "[parameters('sqlNetworkInterfaceName')]",
+            "name": "[parameters('windowsNetworkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
@@ -553,73 +442,42 @@
             }
         },
         {
-            "name": "[parameters('sqlDataDiskResources')[copyIndex()].name]",
-            "type": "Microsoft.Compute/disks",
-            "apiVersion": "2019-03-01",
-            "location": "[parameters('location')]",
-            "properties": "[parameters('sqlDataDiskResources')[copyIndex()].properties]",
-            "sku": {
-                "name": "[parameters('sqlDataDiskResources')[copyIndex()].sku]"
-            },
-            "copy": {
-                "name": "managedDiskResources",
-                "count": "[length(parameters('sqlDataDiskResources'))]"
-            }
-        },
-        {
-            "name": "[parameters('sqlVirtualMachineName')]",
+            "name": "[parameters('windowsVirtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "managedDiskResources",
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('sqlNetworkInterfaceName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('windowsNetworkInterfaceName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "[parameters('sqlVirtualMachineSize')]"
+                    "vmSize": "[parameters('windowsVirtualMachineSize')]"
                 },
                 "storageProfile": {
                     "osDisk": {
                         "createOption": "fromImage",
                         "managedDisk": {
-                            "storageAccountType": "[parameters('sqlOsDiskType')]"
+                            "storageAccountType": "[parameters('windowsOsDiskType')]"
                         }
                     },
                     "imageReference": {
-                        "publisher": "MicrosoftSQLServer",
-                        "offer": "SQL2016SP1-WS2016",
-                        "sku": "SQLDEV",
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
                         "version": "latest"
-                    },
-                    "copy": [
-                        {
-                            "name": "dataDisks",
-                            "count": "[length(parameters('sqlDataDisks'))]",
-                            "input": {
-                                "lun": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].lun]",
-                                "createOption": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].createOption]",
-                                "caching": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].caching]",
-                                "writeAcceleratorEnabled": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].writeAcceleratorEnabled]",
-                                "diskSizeGB": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].diskSizeGB]",
-                                "managedDisk": {
-                                    "id": "[coalesce(parameters('sqlDataDisks')[copyIndex('dataDisks')].id, if(equals(parameters('sqlDataDisks')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('sqlDataDisks')[copyIndex('dataDisks')].name)))]",
-                                    "storageAccountType": "[parameters('sqlDataDisks')[copyIndex('dataDisks')].storageAccountType]"
-                                }
-                            }
-                        }
-                    ]
+                    }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('sqlNetworkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('windowsNetworkInterfaceName'))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('sqlVirtualMachineName')]",
+                    "computerName": "[parameters('windowsVirtualMachineName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -634,54 +492,6 @@
                     }
                 }
             }
-        },
-        {
-            "name": "[parameters('sqlVirtualMachineName')]",
-            "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
-            "apiVersion": "2017-03-01-preview",
-            "location": "[parameters('location')]",
-            "properties": {
-                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('sqlVirtualMachineName'))]",
-                "sqlManagement": "Full",
-                "SqlServerLicenseType": "PAYG",
-                "AutoPatchingSettings": {
-                    "Enable": false
-                },
-                "KeyVaultCredentialSettings": {
-                    "Enable": false,
-                    "CredentialName": ""
-                },
-                "StorageConfigurationSettings": {
-                    "DiskConfigurationType": "[parameters('sqlStorageDisksConfigurationType')]",
-                    "StorageWorkloadType": "[parameters('sqlStorageWorkloadType')]",
-                    "SQLDataSettings": {
-                        "LUNs": "[parameters('dataDisksLuns')]",
-                        "DefaultFilePath": "[parameters('dataPath')]"
-                    },
-                    "SQLLogSettings": {
-                        "LUNs": "[parameters('logDisksLuns')]",
-                        "DefaultFilePath": "[parameters('logPath')]"
-                    },
-                    "SQLTempDbSettings": {
-                        "DefaultFilePath": "[parameters('tempDbPath')]",
-                        "LUNs": "[parameters('tempDisksLuns')]"
-                    }
-                },
-                "ServerConfigurationsManagementSettings": {
-                    "SQLConnectivityUpdateSettings": {
-                        "ConnectivityType": "[parameters('sqlConnectivityType')]",
-                        "Port": "[parameters('sqlPortNumber')]",
-                        "SQLAuthUpdateUserName": "",
-                        "SQLAuthUpdatePassword": ""
-                    },
-                    "AdditionalFeaturesServerConfigurations": {
-                        "IsRServicesEnabled": "[parameters('rServicesEnabled')]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('sqlVirtualMachineName'))]"
-            ]
         },
         {
             "apiVersion": "2018-06-01",
@@ -707,10 +517,10 @@
         {
             "apiVersion": "2018-06-01",
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('sqlVirtualMachineName'),'/', 'InitializeDataDisks')]",
+            "name": "[concat(parameters('windowsVirtualMachineName'),'/', 'InitializeDataDisks')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/',parameters('sqlVirtualMachineName'))]"
+                "[concat('Microsoft.Compute/virtualMachines/',parameters('windowsVirtualMachineName'))]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
@@ -722,79 +532,6 @@
                         "https://dkarmtemplates.blob.core.windows.net/scripts/disableFirewall.ps1"
                     ],
                     "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File disableFirewall.ps1"
-                }
-            }
-        },
-        {
-            "name": "[parameters('linuxNetworkInterfaceName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2018-10-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "subnet": {
-                                "id": "[variables('subnetRef')]"
-                            },
-                            "privateIPAllocationMethod": "Dynamic"
-                        }
-                    }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[variables('nsgId')]"
-                }
-            }
-        },
-        {
-            "name": "[parameters('linuxVirtualMachineName')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2019-03-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('linuxNetworkInterfaceName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
-            ],
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('linuxVirtualMachineSize')]"
-                },
-                "storageProfile": {
-                    "osDisk": {
-                        "createOption": "fromImage",
-                        "managedDisk": {
-                            "storageAccountType": "[parameters('linuxOsDiskType')]"
-                        }
-                    },
-                    "imageReference": {
-                        "publisher": "Debian",
-                        "offer": "debian-10",
-                        "sku": "10",
-                        "version": "latest"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('linuxNetworkInterfaceName'))]"
-                        }
-                    ]
-                },
-                "osProfile": {
-                    "computerName": "[parameters('linuxVirtualMachineName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true,
-                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
-                    }
                 }
             }
         }
